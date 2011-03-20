@@ -6,7 +6,7 @@ use MT::Plugin;
 
 require MT::Plugin;
 
-our $VERSION = '0.5';
+our $VERSION = '0.6';
 
 use base qw( MT::Plugin );
 
@@ -54,6 +54,18 @@ sub is_mt4 {
     my $plugin = shift;
     my $version = MT->version_number;
     return substr($version, 0, 1) eq '4' ? 1 : 0;
+}
+
+sub is_mt50 {
+    my $plugin = shift;
+    my $version = MT->version_number;
+    return substr($version, 0, 3) eq '5.0' ? 1 : 0;
+}
+
+sub is_mt51 {
+    my $plugin = shift;
+    my $version = MT->version_number;
+    return substr($version, 0, 3) eq '5.1' ? 1 : 0;
 }
 
 sub instance { $plugin; }
@@ -186,7 +198,7 @@ HTML
 
 	}
 	
-	else{
+	elsif (is_mt50()){
 	
 	
 	$old = <<"HTML";
@@ -321,6 +333,42 @@ HTML
     $$tmpl_ref =~ s!$old!$new!;  
     
 	}
+
+    elsif (is_mt51()){
+
+  $old = <<'HTML';
+      <mt:setvar name="button_text" value="<__trans phrase="Save">">
+      <mt:setvarblock name="button_title"><__trans phrase="Draft this [_1]" params="<mt:var name="object_label">" escape="html"></mt:setvarblock>
+HTML
+
+    $new = <<'HTML';
+      <mt:setvar name="button_text" value="<__trans phrase="Save">">
+      <mt:setvarblock name="button_title"><__trans phrase="Draft this [_1]" params="<mt:var name="object_label">" escape="html"></mt:setvarblock>
+      <mt:setvar name="review_button_text" value="<__trans phrase="Save">">
+      <mt:setvarblock name="review_button_title"><__trans phrase="Save this [_1]" params="<mt:var name="object_label">" escape="html"></mt:setvarblock>
+HTML
+
+    $old = quotemeta($old);
+    $$tmpl_ref =~ s!$old!$new!;    
+
+
+    $old = <<'HTML';
+    <mt:if name="status_review">
+      <option value="3" selected="selected"><__trans phrase="Unpublished (Review)"></option>
+    <mt:else name="status_spam">
+      <option value="5" selected="selected"><__trans phrase="Unpublished (Spam)"></option>
+HTML
+
+    $new = <<'HTML';
+      <option value="3" selected="selected"><__trans phrase="Unpublished (Review)"></option>
+    <mt:if name="status_spam">
+      <option value="5" selected="selected"><__trans phrase="Unpublished (Spam)"></option>
+HTML
+
+    $old = quotemeta($old);
+    $$tmpl_ref =~ s!$old!$new!;    
+
+    }
 
 }
 

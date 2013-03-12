@@ -7,7 +7,7 @@ as a status of "Unpublished(Review)", a request email for approval will be sent 
 
 ** Version
 
-0.4
+0.7
 
 
 ** Compatibility

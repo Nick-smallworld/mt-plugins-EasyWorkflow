@@ -6,7 +6,7 @@ use MT::Plugin;
 
 require MT::Plugin;
 
-our $VERSION = '0.6';
+our $VERSION = '0.7';
 
 use base qw( MT::Plugin );
 
@@ -45,7 +45,7 @@ sub init_registry {
             	=> \&_post_save_entry,
             'cms_post_save.page'
             	=> \&_post_save_entry,
-                
+
         },
    });
 }
@@ -66,6 +66,12 @@ sub is_mt51 {
     my $plugin = shift;
     my $version = MT->version_number;
     return substr($version, 0, 3) eq '5.1' ? 1 : 0;
+}
+
+sub is_mt52 {
+    my $plugin = shift;
+    my $version = MT->version_number;
+    return substr($version, 0, 3) eq '5.2' ? 1 : 0;
 }
 
 sub instance { $plugin; }
@@ -103,7 +109,7 @@ sub _replace_template {
     my $old;
     my $new;
 
-## 
+##
 
     if (is_mt4()) {
 
@@ -116,9 +122,9 @@ HTML
                  <mt:unless name="can_edit_all_posts">
 HTML
     $old = quotemeta($old);
-    $$tmpl_ref =~ s!$old!$new!;    
-    
-    
+    $$tmpl_ref =~ s!$old!$new!;
+
+
     $old = <<'HTML';
                                 <option value="1"<mt:if name="status_draft"> selected="selected"</mt:if>><__trans phrase="Unpublished (Draft)"></option>
                                 <option value="2"<mt:if name="status_publish"> selected="selected"</mt:if>><__trans phrase="Published"></option>
@@ -197,10 +203,9 @@ HTML
     $$tmpl_ref =~ s!$old!$new!;  
 
 	}
-	
+
 	elsif (is_mt50()){
-	
-	
+
 	$old = <<"HTML";
     <mt:setvar name="draft_button_text" value="<__trans phrase="Save Draft">">
     <mt:setvarblock name="draft_button_title"><__trans phrase="Draft this [_1]" params="<mt:var name="object_label">" escape="html"></mt:setvarblock>
@@ -214,7 +219,7 @@ HTML
 HTML
 
     $old = quotemeta($old);
-    $$tmpl_ref =~ s!$old!$new!;    
+    $$tmpl_ref =~ s!$old!$new!;
 
 	$old = <<"HTML";
 <mt:if name="can_publish_post">
@@ -249,7 +254,7 @@ HTML
 HTML
 
     $old = quotemeta($old);
-    $$tmpl_ref =~ s!$old!$new!;    
+    $$tmpl_ref =~ s!$old!$new!;
     
 	$old = <<"HTML";
 <mt:else>
@@ -278,7 +283,7 @@ HTML
 HTML
 
     $old = quotemeta($old);
-    $$tmpl_ref =~ s!$old!$new!;    
+    $$tmpl_ref =~ s!$old!$new!;
 
 
 	$old = <<"HTML";
@@ -312,7 +317,7 @@ HTML
 HTML
 
     $old = quotemeta($old);
-    $$tmpl_ref =~ s!$old!$new!;    
+    $$tmpl_ref =~ s!$old!$new!;
 
     
     $old = <<'HTML';
@@ -330,11 +335,11 @@ HTML
 HTML
 
     $old = quotemeta($old);
-    $$tmpl_ref =~ s!$old!$new!;  
+    $$tmpl_ref =~ s!$old!$new!;
     
 	}
 
-    elsif (is_mt51()){
+    elsif (is_mt52()){
 
   $old = <<'HTML';
       <mt:setvar name="button_text" value="<__trans phrase="Save">">
@@ -349,7 +354,7 @@ HTML
 HTML
 
     $old = quotemeta($old);
-    $$tmpl_ref =~ s!$old!$new!;    
+    $$tmpl_ref =~ s!$old!$new!;
 
 
     $old = <<'HTML';
@@ -366,7 +371,7 @@ HTML
 HTML
 
     $old = quotemeta($old);
-    $$tmpl_ref =~ s!$old!$new!;    
+    $$tmpl_ref =~ s!$old!$new!;
 
     }
 
